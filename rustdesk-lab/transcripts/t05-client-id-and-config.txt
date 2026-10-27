@@ -1,0 +1,55 @@
+The client, run from its extracted AppImage with its
+home folder inside the lab. No display exists here;
+everything below is the client's command-line face.
+
+$ rustdesk --version
+1.5.0
+
+$ rustdesk --get-id
+473182205
+
+$ rustdesk --get-id        (again, a minute later)
+473182205
+
+The ID is stable: it comes from this machine's own
+identity, kept in the config folder the first run
+created:
+
+$ ls ~/.config/rustdesk/
+RustDesk.toml
+
+$ cat ~/.config/rustdesk/RustDesk.toml
+enc_id = '00ATc73BRD/gj5qwOiKfifwnJRjTE0Yht0RHNXjTJam3eXpRcmmEZOvPzO6EjyRpqnf+w='
+password = ''
+salt = ''
+key_pair = [
+    [],
+    [],
+]
+key_confirmed = false
+
+[keys_confirmed]
+
+Notes on the shape: enc_id is the ID in encrypted
+form. password and salt are where a permanent
+password's hash will live (both empty here; chapter 8
+explains why the lab could not fill them from the
+command line). key_pair is empty until the client's
+service has run once — see t07, where the service
+filled it with a 64-number secret list and a
+32-number public list, the client's own identity
+key pair (chapter 7).
+
+After the service had run once (t07), a second file
+existed, written by the client itself:
+
+$ cat ~/.config/rustdesk/RustDesk2.toml
+rendezvous_server = ''
+nat_type = 0
+serial = 0
+unlock_pin = ''
+trusted_devices = ''
+
+[options]
+local-ip-addr = '198.19.0.2'
+av1-test = 'N'

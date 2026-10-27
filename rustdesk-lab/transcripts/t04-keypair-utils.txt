@@ -1,0 +1,23 @@
+Making a server key pair ahead of time, and checking
+one — the rustdesk-utils tool from the server download.
+(The pair below was made for this transcript and
+discarded; it guards nothing.)
+
+$ rustdesk-utils genkeypair
+Public Key:  DS6BuofcWjFBt2KyuwHKHD+vco7MSORtnra5YKV5ito=
+Secret Key:  kKVikCFA/b7PuD1UskZZbeQCy44bNF34eYJbCbHW3U0NLoG6h9xaMUG3YrK7AcocP69yjsxI5G2etrlgpXmK2g==
+
+$ rustdesk-utils validatekeypair <that public key> <that secret key>
+Key pair is VALID
+
+The same secret key against the lab server's public
+key (t01) — a pair that does not belong together:
+
+$ rustdesk-utils validatekeypair Orc9URZ29Q4UegoYOPySQ3F48YhkjzASpOvGKfImh4M= <the secret key above>
+Key pair is INVALID
+
+And a malformed secret key is refused before any
+comparison happens:
+
+$ rustdesk-utils validatekeypair <a public key> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+Invalid Secret key

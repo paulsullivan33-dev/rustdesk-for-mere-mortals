@@ -1,0 +1,45 @@
+First run of the two server programs in an empty folder.
+hbbs was told where the relay lives:  hbbs -r 127.0.0.1:21117
+
+$ ls
+db_v2.sqlite3  db_v2.sqlite3-shm  db_v2.sqlite3-wal
+hbbr.log  hbbs.log  id_ed25519  id_ed25519.pub
+
+$ cat id_ed25519.pub
+Orc9URZ29Q4UegoYOPySQ3F48YhkjzASpOvGKfImh4M=
+
+$ ls -l id_ed25519 id_ed25519.pub
+-rw-rw---- 1 root root 88 Oct 27 03:26 id_ed25519
+-rw-rw---- 1 root root 44 Oct 27 03:26 id_ed25519.pub
+
+$ cat hbbs.log
+[2026-10-27 03:26:24.097890 +00:00] INFO [src/common.rs:147] Private/public key written to id_ed25519/id_ed25519.pub
+[2026-10-27 03:26:24.098060 +00:00] INFO [src/rendezvous_server.rs:1243] Key: Orc9URZ29Q4UegoYOPySQ3F48YhkjzASpOvGKfImh4M=
+[2026-10-27 03:26:24.098066 +00:00] INFO [src/peer.rs:84] DB_URL=./db_v2.sqlite3
+[2026-10-27 03:26:24.356045 +00:00] INFO [src/rendezvous_server.rs:107] serial=0
+[2026-10-27 03:26:24.356086 +00:00] INFO [src/common.rs:45] rendezvous-servers=[]
+[2026-10-27 03:26:24.356091 +00:00] INFO [src/rendezvous_server.rs:109] Listening on tcp/udp :21116
+[2026-10-27 03:26:24.356094 +00:00] INFO [src/rendezvous_server.rs:110] Listening on tcp :21115, extra port for NAT test
+[2026-10-27 03:26:24.356098 +00:00] INFO [src/rendezvous_server.rs:111] Listening on websocket :21118
+[2026-10-27 03:26:24.356226 +00:00] INFO [src/rendezvous_server.rs:146] mask: None
+[2026-10-27 03:26:24.356234 +00:00] INFO [src/rendezvous_server.rs:147] local-ip: ""
+[2026-10-27 03:26:24.356245 +00:00] INFO [src/common.rs:45] relay-servers=["127.0.0.1:21117"]
+[2026-10-27 03:26:24.356296 +00:00] INFO [src/rendezvous_server.rs:161] ALWAYS_USE_RELAY=N
+[2026-10-27 03:26:24.356311 +00:00] INFO [src/rendezvous_server.rs:193] Start
+
+$ cat hbbr.log
+[2026-10-27 03:25:07.358471 +00:00] INFO [src/relay_server.rs:61] #blacklist(blacklist.txt): 0
+[2026-10-27 03:25:07.358496 +00:00] INFO [src/relay_server.rs:76] #blocklist(blocklist.txt): 0
+[2026-10-27 03:25:07.358500 +00:00] INFO [src/relay_server.rs:82] Listening on tcp :21117
+[2026-10-27 03:25:07.358502 +00:00] INFO [src/relay_server.rs:84] Listening on websocket :21119
+[2026-10-27 03:25:07.358513 +00:00] INFO [src/relay_server.rs:87] Start
+[2026-10-27 03:25:07.358620 +00:00] INFO [src/relay_server.rs:105] DOWNGRADE_THRESHOLD: 0.66
+[2026-10-27 03:25:07.358626 +00:00] INFO [src/relay_server.rs:115] DOWNGRADE_START_CHECK: 1800s
+[2026-10-27 03:25:07.358629 +00:00] INFO [src/relay_server.rs:125] LIMIT_SPEED: 32Mb/s
+[2026-10-27 03:25:07.358632 +00:00] INFO [src/relay_server.rs:136] TOTAL_BANDWIDTH: 1024Mb/s
+[2026-10-27 03:25:07.358635 +00:00] INFO [src/relay_server.rs:146] SINGLE_BANDWIDTH: 128Mb/s
+
+Note: the "Start" line is not the end of hbbs's story in
+this sandbox; see t03 for its startup self-test and what
+this build machine did to it. hbbr ran until it was
+stopped at the end of the lab.

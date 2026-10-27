@@ -1,0 +1,58 @@
+RustDesk — the distilled commands
+====================================================================
+Placeholders: <server> is your server's
+address (name or IP); <version> is the
+release you downloaded.
+
+THE CLIENT (chapters 3-4)
+--------------------------------------------------------------------
+  rustdesk --version           # which client is this
+  rustdesk --get-id            # this machine's ID, no display needed
+  rustdesk --server            # run the service in the foreground
+  ls ~/.config/rustdesk/       # RustDesk.toml, RustDesk2.toml
+  tail ~/.local/share/logs/RustDesk/server/rustdesk_rCURRENT.log
+                               # the service's own account of itself
+
+YOUR SERVER (chapter 5)
+--------------------------------------------------------------------
+  ./hbbr                       # relay first
+  ./hbbs -r 127.0.0.1:21117    # ID server; -r is the relay
+                               # address clients should be given
+  cat id_ed25519.pub           # the public key, for every client
+  ss -tulnp | grep 211         # who is listening, really
+  rustdesk-utils doctor <server>
+                               # the project's own port check;
+                               # 21114 ERROR is correct on the
+                               # free server (chapters 5, 15)
+
+POINTING A CLIENT (chapter 6)
+--------------------------------------------------------------------
+  # Settings -> Network -> Unlock, then set:
+  #   ID Server: <server>      Key: contents of id_ed25519.pub
+  #   Relay Server: <server>   (blank is usually fine)
+  #   API Server:  blank       (paid edition only)
+  #
+  # or the same by file, in RustDesk2.toml under [options]:
+  #   custom-rendezvous-server = '<server>'
+  #   relay-server = '<server>'
+  #   key = '<contents of id_ed25519.pub>'
+
+KEYS (chapter 7)
+--------------------------------------------------------------------
+  rustdesk-utils genkeypair
+                               # a fresh pair, printed
+  rustdesk-utils validatekeypair <public> <secret>
+                               # "Key pair is VALID", or not
+
+PASSWORDS (chapter 8)
+--------------------------------------------------------------------
+  rustdesk --password <password>
+                               # set a permanent password; needs
+                               # the installed service + admin
+                               # rights, else it refuses outright
+
+BACKING UP THE SERVER (chapter 12)
+--------------------------------------------------------------------
+  tar -czf rustdesk-server-backup.tar.gz /path/to/server-folder
+                               # id_ed25519 + id_ed25519.pub +
+                               # db_v2.sqlite3: the whole identity

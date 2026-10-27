@@ -1,0 +1,40 @@
+Pointing the client at the lab's own server, by editing
+the file the client itself wrote (t05). Three lines
+added under [options] in ~/.config/rustdesk/RustDesk2.toml —
+the address is the lab machine, and the key is the
+lab server's public key from t01:
+
+[options]
+custom-rendezvous-server = '127.0.0.1'
+relay-server = '127.0.0.1'
+key = 'Orc9URZ29Q4UegoYOPySQ3F48YhkjzASpOvGKfImh4M='
+
+Then the client's service was started again. Its own
+log (~/.local/share/logs/RustDesk/server/) shows the
+settings being obeyed — the mediator now works for
+127.0.0.1, not for the public server of t07:
+
+[2026-10-27 03:41:04.647430 +00:00] INFO [src/rendezvous_mediator.rs:659] start rendezvous mediator of 127.0.0.1
+[2026-10-27 03:41:04.647981 +00:00] INFO [src/rendezvous_mediator.rs:369] start udp: 127.0.0.1:21116
+[2026-10-27 03:41:04.649572 +00:00] INFO [src/rendezvous_mediator.rs:1309] register_pk of 127.0.0.1:21116 due to key not confirmed
+[2026-10-27 03:41:04.649658 +00:00] ERROR [src/rendezvous_mediator.rs:330] rendezvous mediator error: Operation not permitted (os error 1)
+
+register_pk is the client offering its own public key
+to the server under its ID — the registration chapter 2
+describes. Here it could go no further: the sandbox
+refuses the UDP send itself (os error 1, the same wall
+as t03), and hbbs was in any case already down. The
+[keys_confirmed] table in RustDesk.toml stayed empty:
+no server's key was ever confirmed, because no
+registration ever completed. Both halves of that
+sentence are this sandbox, not the software.
+
+One more line from the same log, a few seconds earlier.
+A client pointed at a custom server also looks for the
+API server on the same host — port 21114, which the
+free server does not have:
+
+[2026-10-27 03:40:50.599295 +00:00] WARN [src/hbbs_http/sync.rs:247] Heartbeat failed: reqwest::Error { kind: Request, url: "http://127.0.0.1:21114/api/heartbeat", source: ... "tcp connect error", 127.0.0.1:21114, Os { code: 111, kind: ConnectionRefused, message: "Connection refused" } }
+
+On a free-server setup this warning is expected and
+harmless; chapter 15 returns to it.

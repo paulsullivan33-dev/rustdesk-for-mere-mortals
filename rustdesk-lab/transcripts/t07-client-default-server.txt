@@ -1,0 +1,39 @@
+The client's service with untouched settings — the
+baseline that t06 is compared against. Started with
+`rustdesk --server` and stopped after twenty seconds;
+the service itself has no window, so the Gtk warning
+is just its tray component finding no display.
+
+(rustdesk:34105): Gtk-WARNING **: 03:30:09.911: cannot open display:
+
+From its log (~/.local/share/logs/RustDesk/server/):
+
+[2026-10-27 03:30:09.808222 +00:00] INFO [src/rendezvous_mediator.rs:659] start rendezvous mediator of rs-ny.rustdesk.com
+[2026-10-27 03:30:09.808774 +00:00] INFO [src/rendezvous_mediator.rs:369] start udp: rs-ny.rustdesk.com:21116
+[2026-10-27 03:30:09.833753 +00:00] INFO [src/rendezvous_mediator.rs:1309] register_pk of rs-ny due to key not confirmed
+[2026-10-27 03:30:09.833808 +00:00] INFO [libs/hbb_common/src/config.rs:1125] Generated new keypair for id:
+[2026-10-27 03:30:09.837553 +00:00] ERROR [src/rendezvous_mediator.rs:330] rendezvous mediator error: Operation not permitted (os error 1)
+[2026-10-27 03:30:26.842149 +00:00] INFO [src/rendezvous_mediator.rs:659] start rendezvous mediator of rs-ny.rustdesk.com
+[2026-10-27 03:30:26.842649 +00:00] INFO [src/rendezvous_mediator.rs:369] start udp: rs-ny.rustdesk.com:21116
+
+Three things to notice. The default rendezvous server
+is a named public one (rs-ny is one of RustDesk's
+public ID servers) and registration begins by UDP to
+its port 21116 — the same port your own hbbs listens
+on. The service generated this client's identity key
+pair on this first run ("Generated new keypair for
+id"), which is what filled key_pair in t05. And when
+the registration send was refused, the service did not
+die: it waited and started the mediator again, which
+is what it will do on any machine whose network is not
+ready yet.
+
+Also in the log, before the mediator lines:
+
+[2026-10-27 03:30:09.656326 +00:00] ERROR [src/common.rs:2735] Failed to get public IPv6 address: Failed to resolve STUN ipv6 server address: stun.nextcloud.com:443
+[2026-10-27 03:30:28.806671 +00:00] INFO [src/common.rs:706] Testing nat ...
+
+NAT typing — working out what kind of network the
+machine sits behind, using a STUN server — is part of
+starting up, because it decides how hard the machine
+will be to reach (chapter 2).

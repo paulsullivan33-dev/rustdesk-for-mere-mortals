@@ -1,0 +1,36 @@
+Why hbbs would not stay up on this build machine.
+
+hbbs tests itself just after "Start": it sends its own
+UDP port a small packet (:test_hbbs:) and waits to hear
+itself. In this sandbox every UDP send — even to the
+machine's own loopback address — is refused by the
+environment before it leaves the process, so the test
+can never pass here and hbbs exits with code 1. On an
+ordinary Linux machine the same binary runs on; the
+lab verified everything up to this wall and no further,
+and says so wherever it matters (criteria.md).
+
+The end of hbbs's log inside a loopback-only network
+namespace (the same failure, wearing its error line):
+
+[2026-10-27 03:25:07.613787 +00:00] INFO [src/rendezvous_server.rs:193] Start
+[2026-10-27 03:25:07.616185 +00:00] ERROR [src/rendezvous_server.rs:181] Failed to run hbbs test with 0.0.0.0:21116: Operation not permitted (os error 1)
+
+What the debugger saw on the normal network — the test
+packet addressed to hbbs's own UDP port, twice, and the
+process leaving immediately afterwards:
+
+$ strace -f hbbs -r 127.0.0.1:21117
+sendto(21, "2\17\n\r(:test_hbbs:)", 17, MSG_NOSIGNAL, {sa_family=AF_INET6, sin6_port=htons(21116), sin6_addr=inet_pton(AF_INET6, "::1")}, 28) = -1 EPERM (Operation not permitted)
+sendto(21, "2\17\n\r(:test_hbbs:)", 17, MSG_NOSIGNAL, {sa_family=AF_INET, sin_port=htons(21116), sin_addr=inet_addr("127.0.0.1")}, 16) = -1 EPERM (Operation not permitted)
+exit_group(1)
+
+And the same refusal with no RustDesk code involved at
+all — a three-line UDP echo test in Python:
+
+client side: PermissionError [Errno 1] Operation not permitted
+(the sendto to 127.0.0.1 never left the process)
+
+TCP, by contrast, is not blocked: the probes in t02
+connected to hbbr on loopback without complaint, and
+hbbr — which needs no UDP — ran the whole lab.

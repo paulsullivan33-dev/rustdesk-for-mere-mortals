@@ -1,0 +1,36 @@
+Listening sockets while hbbr was up (hbbs was already
+down — see t03 — so only the relay's sockets appear):
+
+$ ss -tulnp | grep 2111
+tcp   LISTEN 0      0                  *:21119            *:*    users:(("hbbr",pid=28792,fd=10))
+tcp   LISTEN 0      0                  *:21117            *:*    users:(("hbbr",pid=28792,fd=9))
+
+A plain TCP probe of the relay port. hbbr speaks the
+RustDesk protocol, not HTTP, so "connected, then an
+empty reply" is the healthy answer:
+
+$ curl -sv --max-time 2 http://127.0.0.1:21117/
+*   Trying 127.0.0.1:21117...
+* Connected to 127.0.0.1 (127.0.0.1) port 21117
+* Empty reply from server
+
+The project's own checker, pointed at the same machine.
+21117 and 21119 pass because hbbr was running; the hbbs
+ports fail because hbbs was not (t03). Port 21114 fails
+on every free-server install: it is the Pro edition's
+API and web console port, and the free server has
+nothing there. doctor reports it anyway.
+
+$ rustdesk-utils doctor 127.0.0.1
+Checking server:  127.0.0.1
+
+
+Checking IP address: 127.0.0.1
+Is IPV4: true
+Is IPV6: false
+TCP Port 21114 (API): ERROR
+TCP Port 21115 (hbbs extra port for nat test): ERROR
+TCP Port 21116 (hbbs): ERROR
+TCP Port 21117 (hbbr tcp): OK in 2 ms
+TCP Port 21118 (hbbs websocket): ERROR
+TCP Port 21119 (hbbr websocket): OK in 0 ms

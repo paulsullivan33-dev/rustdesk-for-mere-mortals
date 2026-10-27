@@ -1,0 +1,29 @@
+site_name: RustDesk for Mere Mortals
+site_description: A remote desktop whose doors are yours. Seeing and driving your own computers from anywhere, through a server you run yourself, with the key in your own hands and the limits stated plainly.
+site_url: https://paulsullivan33-dev.github.io/rustdesk-for-mere-mortals/
+copyright: 'Part of <a href="https://paulsullivan33-dev.github.io/mere-mortals/">For Mere Mortals</a> · Text <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, code MIT'
+
+# Guides live at the repo root (nice for GitHub browsing).
+# The deploy workflow copies them into docs/ before building.
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - What RustDesk Is: what-rustdesk-is.md
+  - The Moving Parts: the-moving-parts.md
+  - Installing the Client: installing-the-client.md
+  - Your First Connection: your-first-connection.md
+  - Running Your Own Server: running-your-own-server.md
+  - Pointing Clients at Your Server: pointing-clients-at-your-server.md
+  - The Key and Why It Matters: the-key-and-why-it-matters.md
+  - Passwords and Two-Factor: passwords-and-two-factor.md
+  - File Transfer and the Terminal: file-transfer-and-the-terminal.md
+  - Address Books and Tags: address-books-and-tags.md
+  - The Web Client and the Console: the-web-client-and-the-console.md
+  - Recipes: recipes.md
+  - The Neighbours: the-neighbours.md
+  - Limits: limits.md
+  - Troubleshooting: troubleshooting.md
+  - Glossary: glossary.md
+  - Writing Criteria: criteria.md

@@ -1,0 +1,90 @@
+The lab — one real server pair, one real client,
+one machine, nobody else's desktops
+====================================================================
+
+The lab is RustDesk as the project ships it,
+downloaded from its official GitHub releases
+onto the build machine (an Ubuntu 24.04
+sandbox, 2 CPUs, 7.7 GB RAM, no display):
+
+  * Server 1.1.16: the hbbs, hbbr and
+    rustdesk-utils binaries from
+    rustdesk-server-linux-amd64.zip,
+    run from one folder of their own.
+  * Client 1.5.0: the official AppImage,
+    extracted (not installed) and run
+    with its home folder inside the lab,
+    through its command-line face —
+    --version, --get-id, --password,
+    --server — and through the config
+    files and logs it wrote for itself.
+  * Every connection attempted was the
+    lab talking to itself, on the one
+    machine.
+
+What the lab ran, in
+rustdesk-lab/transcripts/:
+
+  * t00 — versions and help for all
+    four programs.
+  * t01 — the server pair's first run:
+    the key pair written, the database
+    created, every listening line, the
+    relay's bandwidth defaults.
+  * t02 — listening sockets, a TCP
+    probe of the relay, and the
+    project's doctor checking the lab
+    machine (the healthy ports pass;
+    the ones belonging to the stopped
+    hbbs fail; 21114 fails as it does
+    on every free server).
+  * t03 — the lab's wall: hbbs's
+    startup self-test sends a UDP
+    packet to itself, this sandbox
+    refuses all UDP sends (even to
+    127.0.0.1), and hbbs exits. Shown
+    with the debugger's trace and a
+    three-line Python UDP test that
+    fails with no RustDesk code
+    involved. hbbr, needing no UDP,
+    ran throughout.
+  * t04 — rustdesk-utils making a key
+    pair, validating it, and refusing
+    a mismatched and a malformed pair.
+    The pair printed was made for the
+    transcript and discarded.
+  * t05 — the client's ID (473182205),
+    stable across runs, and the config
+    files it created, field by field.
+  * t06 — the client repointed at the
+    lab server by editing the config
+    file it wrote itself: its log's
+    mediator lines move from the
+    public server to 127.0.0.1, it
+    offers its key (register_pk), and
+    the sandbox's UDP refusal stops
+    the registration there. Its
+    21114 heartbeat warning is also
+    captured here.
+  * t07 — the same service before the
+    edit, against the default public
+    server: mediator, key pair
+    generated, registration refused by
+    the same wall, retried rather than
+    fatal.
+
+What the lab could not do, it did not
+fake. The sandbox has no display, so
+no graphical session was ever opened:
+chapters 4, 9 and the session parts of
+8 and 10 are taught from the project's
+documentation and labelled in
+criteria.md. And because UDP is
+refused here, no registration with
+hbbs — the lab's or the public one —
+ever completed; the client's attempts
+are the evidence, and they are real.
+The server's identity in these
+transcripts (its key, the client's
+ID) belongs to a discarded sandbox
+and guards nothing.
